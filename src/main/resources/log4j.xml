@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--日志级别以及优先级排序: OFF > FATAL > ERROR > WARN > INFO > DEBUG > TRACE > ALL -->
+<!-- status log4j2内部日志级别 -->
+<configuration status="INFO">
+    <!-- 全局参数 -->
+    <Properties>
+        <Property name="displayName">zhangzhao-web</Property>
+    </Properties>
+    <Appenders>
+        <Console name="console" target="SYSTEM_OUT" follow="true">
+            <PatternLayout>
+                <pattern>%d [%t] %-5p [%c] - %m%n</pattern>
+            </PatternLayout>
+        </Console>
+        <File name="debug" fileName="../logs/web/${displayName}.log" append="true">
+            <ThresholdFilter level="DEBUG" onMatch="ACCEPT" onMismatch="DENY"/>
+            <PatternLayout>
+                <pattern>%-d{yyyy-MM-dd HH:mm:ss} [ %p ] [ %C{1}.java :%L(%M)] %m%n</pattern>
+            </PatternLayout>
+        </File>
+        <File name="error" fileName="../logs/web/${displayName}_error.log" append="true">
+            <ThresholdFilter level="ERROR" onMatch="ACCEPT" onMismatch="DENY"/>
+            <PatternLayout>
+                <pattern>%-d{yyyy-MM-dd HH:mm:ss} [ %p ] [ %C{1}.java :%L(%M)] %m%n</pattern>
+            </PatternLayout>
+        </File>
+        <!-- 滚动文件 -->
+        <RollingFile name="rollingFile" fileName="../logs/web/${displayName}.log"
+                     filePattern="../logs/web/${displayName}/old/$${date:yyyy-MM}/error-%d{yyyy-MM-dd}-%i.log">
+            <PatternLayout>
+                <pattern>%-d{yyyy-MM-dd HH:mm:ss} [ %p ] [ %C{1}.java :%L(%M)] %m%n</pattern>
+            </PatternLayout>
+            <!-- 按大小划分 -->
+            <SizeBasedTriggeringPolicy size="50 MB"/>
+        </RollingFile>
+        <RollingFile name="rollingFileError" fileName="../logs/web/${displayName}_error.log"
+                     filePattern="../logs/web/${displayName}/old/$${date:yyyy-MM}/error-%d{yyyy-MM-dd}-%i.log">
+            <ThresholdFilter level="error" onMatch="ACCEPT" onMismatch="DENY"/>
+            <PatternLayout pattern="[%d{HH:mm:ss:SSS}] [%p] - %l - %m%n"/>
+            <SizeBasedTriggeringPolicy size="50 MB"/>
+        </RollingFile>
+    </Appenders>
+
+    <!--然后定义logger，只有定义了logger并引入的appender，appender才会生效-->
+    <Loggers>
+        <!-- <Logger name="org.apache.catalina.util.LifecycleBase" level="ERROR"
+        /> <Logger name="org.apache.coyote.http11.Http11NioProtocol" level="WARN"
+        /> <Logger name="org.apache.tomcat.util.net.NioSelectorPool" level="WARN"
+        /> -->
+        <!--过滤掉spring的一些无用的INFO信息-->
+        <!--<Logger name="org.springframework" level="INFO"/>-->
+        <Logger name="org.springframework" level="DEBUG"/>
+        <Root level="DEBUG">
+            <AppenderRef ref="console"></AppenderRef>
+            <AppenderRef ref="debug"></AppenderRef>
+            <AppenderRef ref="error"></AppenderRef>
+            <AppenderRef ref="rollingFile"></AppenderRef>
+            <AppenderRef ref="rollingFileError"></AppenderRef>
+        </Root>
+    </Loggers>
+</configuration>
