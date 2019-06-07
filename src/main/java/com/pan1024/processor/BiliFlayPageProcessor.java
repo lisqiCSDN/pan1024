@@ -2,6 +2,7 @@ package com.pan1024.processor;
 
 import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.JsonPath;
+import org.springframework.stereotype.Component;
 import us.codecraft.webmagic.Page;
 import us.codecraft.webmagic.Site;
 import us.codecraft.webmagic.Spider;
@@ -12,13 +13,13 @@ import us.codecraft.webmagic.processor.PageProcessor;
  * @Date: 2019/6/6
  * @describe: bilibili获取用户播放数
  */
+@Component
 public class BiliFlayPageProcessor implements PageProcessor {
 
-    //构建Site对象，指定请求头键值字段
     private Site site = Site.me()
             .setRetryTimes(3)
             .setTimeOut(30000)
-            .setSleepTime(3000)     //跟据试验，http://space.bilibili.com/ajax/member/GetInfo接口有IP接入限制，估计是60s内上限150次
+            .setSleepTime(3000)
             .setCycleRetryTimes(3)
             .setUseGzip(true)
             .addHeader("Host","api.bilibili.com")

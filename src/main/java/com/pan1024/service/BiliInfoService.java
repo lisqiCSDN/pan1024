@@ -5,12 +5,24 @@ import com.pan1024.entity.BiliUser;
 import com.pan1024.pipeline.BiliPipeline;
 import com.pan1024.processor.BiliInfoPageProcessor;
 import com.pan1024.repository.BiliUserRepository;
+import com.pan1024.vo.ResultPageVO;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import us.codecraft.webmagic.Spider;
 
 import javax.annotation.PostConstruct;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,6 +32,7 @@ import java.util.List;
  */
 @Slf4j
 @Component
+@Transactional
 public class BiliInfoService {
     @Autowired
     private BiliPipeline biliPipeline;
@@ -27,19 +40,22 @@ public class BiliInfoService {
     private BiliInfoPageProcessor biliSpiderPageProcessor;
     @Autowired
     private BiliUserRepository biliUserRepository;
+    @Autowired
+    private BiliFollowerService biliFollowerService;
+    @Autowired
+    private BiliFlayService biliFlayService;
 
     private Spider spider;
     @PostConstruct
     private void init(){
         spider = Spider.create(biliSpiderPageProcessor)
-                .addPipeline(biliPipeline)
-                .thread(10);
+                .addPipeline(biliPipeline);
     }
 
-    public void start(Integer count){
+    public void start(Integer thread,Integer count){
         Long maxMid = biliUserRepository.MaxMid();
-        maxMid=maxMid == null?0:maxMid;
-        for (long i = maxMid+1; i < maxMid+count+1; i++) {
+        maxMid=maxMid == null?1:maxMid;
+        for (long i = maxMid; i < maxMid+count+1; i++) {
             String url = BiliUrlConstant.INFO_URL.replace(BiliUrlConstant.REPLACE_NAME, String.valueOf(i));
             spider.addUrl(url);
         }
@@ -54,15 +70,28 @@ public class BiliInfoService {
 //        downloader.setProxyProvider(SimpleProxyProvider.from(proxyList.toArray(new Proxy[0])));
 //        downloader.setProxyProvider(SimpleProxyProvider.from(new Proxy("101.101.101.101",8888)));
 //        spider.setDownloader(downloader);
-        spider.start();
+        spider.thread(thread).start();
+        biliFollowerService.start(thread,count,maxMid);
+        biliFlayService.start(thread,count,maxMid);
     }
 
     public void stop(){
         spider.stop();
     }
 
-    public List<BiliUser> list() {
-        List<BiliUser> list = biliUserRepository.findAll();
-        return list;
+    public ResultPageVO<BiliUser> list(Integer page, Integer pageSize, String search) {
+        Pageable pageable = PageRequest.of(page - 1, pageSize);
+        Page<BiliUser> all = biliUserRepository.findAll(new Specification<BiliUser>() {
+            @Override
+            public Predicate toPredicate(Root<BiliUser> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder
+                    criteriaBuilder) {
+                List<Predicate> predicates = new ArrayList<>(1);
+                if (StringUtils.isNotBlank(search)){
+                    predicates.add(criteriaBuilder.equal(root.get("name"), "%"+search+"%"));
+                }
+                return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
+            }
+        },pageable);
+        return new ResultPageVO<BiliUser>().success(all.getContent(),all.getTotalElements());
     }
 }

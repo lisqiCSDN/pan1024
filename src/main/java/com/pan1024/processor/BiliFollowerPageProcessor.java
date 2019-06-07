@@ -2,6 +2,7 @@ package com.pan1024.processor;
 
 import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.JsonPath;
+import org.springframework.stereotype.Component;
 import us.codecraft.webmagic.Page;
 import us.codecraft.webmagic.Site;
 import us.codecraft.webmagic.Spider;
@@ -12,6 +13,7 @@ import us.codecraft.webmagic.processor.PageProcessor;
  * @Date: 2019/6/6
  * @describe: bilibili获取用户关注，粉丝数
  */
+@Component
 public class BiliFollowerPageProcessor implements PageProcessor {
 
     //构建Site对象，指定请求头键值字段

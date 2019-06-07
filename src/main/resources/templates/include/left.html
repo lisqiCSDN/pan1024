@@ -1,0 +1,188 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<div id="app" th:fragment="left">
+    <!-- 顶部 -->
+    <div class="layui-header">
+        <a href="/" class="logo">layui后台管理</a>
+        <!-- 天气信息 -->
+        <div class="weather" pc>
+            <div id="tp-weather-widget"></div>
+            <script>(function(T,h,i,n,k,P,a,g,e){g=function(){P=h.createElement(i);a=h.getElementsByTagName(i)[0];P.src=k;P.charset="utf-8";P.async=1;a.parentNode.insertBefore(P,a)};T["ThinkPageWeatherWidgetObject"]=n;T[n]||(T[n]=function(){(T[n].q=T[n].q||[]).push(arguments)});T[n].l=+new Date();if(T.attachEvent){T.attachEvent("onload",g)}else{T.addEventListener("load",g,false)}}(window,document,"script","tpwidget","//widget.seniverse.com/widget/chameleon.js"))</script>
+            <script>tpwidget("init", {
+                "flavor": "slim",
+                "location": "WX4FBXXFKE4F",
+                "geolocation": "disabled",
+                "language": "zh-chs",
+                "unit": "c",
+                "theme": "chameleon",
+                "container": "tp-weather-widget",
+                "bubble": "disabled",
+                "alarmType": "badge",
+                "color": "#FFFFFF",
+                "uid": "U9EC08A15F",
+                "hash": "14dff75e7253d3a8b9727522759f3455"
+            });
+            tpwidget("show");</script>
+        </div>
+        <ul class="layui-nav top_menu">
+            <li class="layui-nav-item">
+                <a href="javascript:;">
+                    <img src="http://i1.hdslb.com/bfs/face/34c5b30a990c7ce4a809626d8153fa7895ec7b63.gif" class="layui-circle" width="35" height="35">
+                    <cite>请叫我马哥</cite>
+                </a>
+                <dl class="layui-nav-child">
+                    <dd><a href="javascript:;" data-method="notice" class="layui-btn">修改密码</a></dd>
+                    <dd><a href="javascript:;" data-url="page/user/userInfo.html"><i class="iconfont icon-zhanghu" data-icon="icon-zhanghu"></i><cite>个人资料</cite></a></dd>
+                    <dd><a href="javascript:;" data-url="page/user/changePwd.html"><i class="iconfont icon-shezhi1" data-icon="icon-shezhi1"></i><cite>修改密码</cite></a></dd>
+                    <dd><a href="javascript:;"><i class="iconfont icon-loginout"></i><cite>退出</cite></a></dd>
+                </dl>
+            </li>
+        </ul>
+    </div>
+
+    <div class="layui-side layui-bg-black" style="overflow: hidden;">
+        <div class="user-photo">
+            <a class="img" title="我的头像" ><img src="http://i1.hdslb.com/bfs/face/34c5b30a990c7ce4a809626d8153fa7895ec7b63.gif"></a>
+            <p>你好！<span class="userName">请叫我马哥</span>, 欢迎登录</p>
+        </div>
+        <div class="layui-side-scroll">
+            <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+            <ul class="layui-nav layui-nav-tree">
+                <!--<li class="layui-nav-item">-->
+                    <!--<a href="/bili/info/view"-->
+                       <!--th:class="${url eq '/bili/info/view'}?'layui-this':''">bilibili用户管理</a>-->
+                <!--</li>-->
+                <li class="layui-nav-item"
+                    th:class="${not #strings.isEmpty(url) and #strings.startsWith(url,'/bili')}?'layui-nav-item layui-nav-itemed':'layui-nav-item'">
+                    <a href="javascript:;">
+                        <i class="layui-icon" data-icon=""></i>
+                        <cite>bilibili</cite>
+                        <span class="layui-nav-more"></span>
+                    </a>
+                    <dl class="layui-nav-child">
+                        <dd>
+                            <a  href="/bili/info/view"
+                                th:class="${url eq '/bili/info/view'}?'layui-this':''">
+                                <i class="layui-icon" data-icon=""></i>
+                                <cite>bilibili用户管理</cite>
+                            </a>
+                        </dd>
+                        <dd>
+                            <a href="javascript:;" data-url="">
+                                <i class="layui-icon" data-icon=""></i>
+                                <cite>bilibili用户爬取</cite>
+                            </a>
+                        </dd>
+                    </dl>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<link rel="stylesheet" href="/css/main.css"/>
+<link rel="stylesheet" href="/layui/css/layui.css"/>
+<script src="/layui/layui.js"></script>
+<script src="/js/jquery-2.1.1.js"></script>
+<script type="text/javascript">
+    $(function () {
+        $('#icon').prev('img').attr('src', $('#icon').text());
+    })
+</script>
+<script>
+    layui.use('form', function () { //独立版的layer无需执行这一句
+        var $ = layui.jquery, form = layui.form, layer = layui.layer; //独立版的layer无需执行这一句
+        //触发事件
+        var active = {
+            notice: function () {
+                //示范一个公告层
+                layer.open({
+                    type: 1
+                    , title: '修改密码' //不显示标题栏
+                    , area: ['373px', '285px']
+                    , anim: 1
+                    , shadeClose: true
+                    , id: 'LAY_layuipro' //设定一个id，防止重复弹出
+                    , btnAlign: 'c' //居中对齐
+                    , moveType: 1 //拖拽模式，0或者1
+                    , content: '<form class="layui-form" action="" style="padding-top: 33px;">' +
+                    '<div class="layui-form-item">' +
+                    '<label class="layui-form-label">新密码</label>' +
+                    '<div class="layui-input-inline">' +
+                    '<input type="password" name="newPassword1" required  lay-verify="required" placeholder="请输入密码" autocomplete="off" class="layui-input">' +
+                    '</div>' +
+                    '</div>' +
+                    '<div class="layui-form-item">' +
+                    '<label class="layui-form-label">确认密码</label>' +
+                    '<div class="layui-input-inline">' +
+                    '<input type="password" name="newPassword2" required lay-verify="required" placeholder="请输入密码" autocomplete="off" class="layui-input">' +
+                    '</div>' +
+                    '</div>' +
+                    '<div class="layui-form-item">' +
+                    '<div class="layui-input-block">' +
+                    '<button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>' +
+                    '<button type="reset" class="layui-btn layui-btn-primary">重置</button>' +
+                    '</div>' +
+                    '</div>' +
+                    '</form>'
+                });
+            }
+        };
+
+        $('.layui-btn').on('click', function () {
+            var othis = $(this), method = othis.data('method');
+            active[method] ? active[method].call(this, othis) : '';
+        });
+
+        form.on('submit(formDemo)', function (data) {
+            var data = data.field;
+            if (data.newPassword1 === data.newPassword2) {
+                $.post('/web/admin/update/password/s/id', {
+                    oldPassword: data.oldPassword,
+                    newPassword: data.newPassword2
+                }, function (data) {
+                    if (data.code == '200') {
+                        layer.msg('修改成功')
+                        layer.closeAll();
+                    } else {
+                        layer.msg('修改失败')
+                    }
+                }, 'json')
+            } else {
+                layer.msg('两次密码不一样');
+            }
+            return false;
+        });
+    });
+
+    $.fn.serializeObject = function () {
+        var o = {};
+        var a = this.serializeArray();
+        $.each(a, function () {
+            if (o[this.name]) {
+                if (!o[this.name].push) {
+                    o[this.name] = [o[this.name]];
+                }
+                o[this.name].push(this.value || '');
+            } else {
+                o[this.name] = this.value || '';
+            }
+        });
+        return o;
+    }
+
+    function createTime(v) {
+        var date = new Date(v);
+        var y = date.getFullYear();
+        var m = date.getMonth() + 1;
+        m = m < 10 ? '0' + m : m;
+        var d = date.getDate();
+        d = d < 10 ? ("0" + d) : d;
+        var h = date.getHours();
+        h = h < 10 ? ("0" + h) : h;
+        var M = date.getMinutes();
+        M = M < 10 ? ("0" + M) : M;
+        var s = date.getSeconds();
+        s = s < 10 ? ("0" + s) : s;
+        var str = y + "-" + m + "-" + d + " " + h + ":" + M + ":" + s;
+        return str;
+    }
+</script>

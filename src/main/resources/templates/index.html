@@ -1,39 +1,27 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Index</title>
-    <#include "/header.html">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>首页</title>
 </head>
-<body>
-<!-- 导航栏 -->
-<div class="sidebar text-left">
-    <nav class="navbar navbar-default" role="navigation">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <a class="navbar-brand">Fulluck Tabua Club Member Points Inquire 积分查询 Alpha</a>
-            </div>
-
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+    <div th:include="include/left"></div>
+    <div class="layui-body">
+        <!-- 内容主体区域 -->
+        <div class="layui-form" style="padding: 20px">
+            <h1 style="text-align: center">欢迎[[${url}]]</h1>
         </div>
-    </nav>
-</div>
-<main role="main" class="container">
-    <div class="input-group mb-3">
-        <form action="/search" method="get">
-            <div class="input-group input-group-lg">
-                <div class="input-group">
-                    输入卡号： <input id="cardNumber" name="cardNumber"  type="text"  class="form-control" placeholder="Tabua Card Number">
-                </div>
-                <br>
-                <div class="input-group">
-                    或会员名：<input id="name" name="name"  type="text"  class="form-control" placeholder="Tabua Member">
-                </div>
-                <br>
-                <div class="input-group">
-                    <button class="btn btn-outline-secondary" type="submit">提交</button>
-                </div>
-            </div>
-        </form>
     </div>
-</main><!-- /.container -->
+    <!--<b th:text="hello,world!"/>-->
+    <div class="layui-footer" th:replace="include/bottom"></div>
+</div>
 </body>
+<script>
+    //JavaScript代码区域
+    layui.use('element', function () {
+        var element = layui.element;
+    });
+</script>
 </html>

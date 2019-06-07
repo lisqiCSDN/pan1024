@@ -5,11 +5,13 @@ import com.pan1024.repository.BiliUserRepository;
 import com.pan1024.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import us.codecraft.webmagic.ResultItems;
 import us.codecraft.webmagic.Task;
 import us.codecraft.webmagic.pipeline.Pipeline;
 
 @Component
+@Transactional
 public class BiliPipeline implements Pipeline{
 
     @Autowired
