@@ -14,7 +14,7 @@
 </head>
 <body class="layui-layout-body">
 <div class="layui-layout layui-layout-admin main_body">
-    <div th:include="include/left"></div>
+    <div th:replace="include/left"></div>
     <div class="layui-body">
         <!-- 内容主体区域 -->
         <div class="layui-form">
@@ -26,21 +26,12 @@
                     </div>
                     <a class="layui-btn" data-type="reload">查询</a>
                 </div>
-                <div class="layui-inline">
-                    <div class="layui-input-inline">
-                        <input type="text" value="1" id="thread" placeholder="线程" class="layui-input search_input">
-                    </div>
-                    <div class="layui-input-inline">
-                        <input type="text" value="100" id="count" placeholder="数量" class="layui-input search_input">
-                    </div>
-                    <a class="layui-btn" data-type="start">开始</a>
-                </div>
             </div>
-            <div class="layui-tab marg0">
+            <div class="layui-tab">
                 <!--<ul class="layui-tab-title top_tab">-->
                     <!--<li class="layui-this" lay-id=""><i class="iconfont icon-computer"></i> <cite>后台首页</cite></li>-->
                 <!--</ul>-->
-                <div class="layui-tab-content clildFrame">
+                <div class="layui-tab-content">
                     <div class="layui-tab-item layui-show">
                         <table class="layui-hide" id="baseInfo" lay-filter="table-listener"></table>
                     </div>
@@ -49,15 +40,15 @@
         </div>
     </div>
 
-    <div class="layui-footer" th:include="include/bottom"></div>
+    <div class="layui-footer" th:replace="include/bottom"></div>
 </div>
-<script type="text/html" id="barDemo">
+<script type="text/html" id="operation">
     <a class="layui-btn layui-btn-xs" lay-event="edit">修改</a>
-    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+    <a class="layui-btn layui-btn-danger" lay-event="del">删除</a>
 </script>
 <script type="text/javascript">
-    layui.use(['element', 'table', 'form'], function () {
-        var element = layui.element, table = layui.table, form = layui.form;
+    layui.use(['table', 'form'], function () {
+        var table = layui.table, form = layui.form;
         table.render({
             elem: '#baseInfo'
             , url: '/bili/info/list'
@@ -94,10 +85,10 @@
                     , {field: 'createTime', title: '收入时间', align: 'center', templet: function (data) {
                             return createTime(data.createTime)
                         }}
-                    , {field: 'lastDate', title: '更新时间', align: 'center', templet: function (data) {
-                            return createTime(data.lastDate)
+                    , {field: 'fansLastDate', title: '更新时间', align: 'center', templet: function (data) {
+                            return createTime(data.fansLastDate)
                         }}
-                    // , {field: 'right', title: '操作', toolbar: "#barDemo", align: 'center'}
+                    // , {field: 'right', title: '操作', toolbar: "#operation", align: 'center'}
                 ]
             ]
         });
@@ -141,11 +132,6 @@
                     });
                     layer.close(index);
                 }, 400);
-            },start:function () {
-                var thread = $('#thread').val(),count = $('#count').val();
-                $.post('/bili/start', {thread: thread,count:count}, function (data) {
-                    layer.msg('正在执行，请稍候...', {icon: 1, time: 1000})
-                }, 'json')
             }
         };
         $('.layui-btn').on('click', function () {

@@ -15,5 +15,5 @@ public class BiliUrlConstant {
     /**
      * bilibili获取用户播放数
      */
-    public static String FLAY_URL = "https://api.bilibili.com/x/space/upstat?mid=MID&jsonp=jsonp";
+    public static String PLAY_URL = "https://api.bilibili.com/x/space/upstat?mid=MID&jsonp=jsonp";
 }

@@ -4,7 +4,7 @@
 <configuration status="INFO">
     <!-- 全局参数 -->
     <Properties>
-        <Property name="displayName">zhangzhao-web</Property>
+        <Property name="displayName">pan1024</Property>
     </Properties>
     <Appenders>
         <Console name="console" target="SYSTEM_OUT" follow="true">

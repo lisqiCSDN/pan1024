@@ -13,7 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import us.codecraft.webmagic.Spider;
 
@@ -28,11 +28,11 @@ import java.util.List;
 /**
  * @ClassName: SpiderService
  * @Date: 2019/6/6
- * @describe: 手动控制爬虫
+ * @describe: 获取用户信息
  */
 @Slf4j
-@Component
-@Transactional
+@Service
+@Transactional(rollbackFor = Exception.class)
 public class BiliInfoService {
     @Autowired
     private BiliPipeline biliPipeline;
@@ -43,7 +43,7 @@ public class BiliInfoService {
     @Autowired
     private BiliFollowerService biliFollowerService;
     @Autowired
-    private BiliFlayService biliFlayService;
+    private BiliPlayService biliFlayService;
 
     private Spider spider;
     @PostConstruct
@@ -52,10 +52,9 @@ public class BiliInfoService {
                 .addPipeline(biliPipeline);
     }
 
-    public void start(Integer thread,Integer count){
-        Long maxMid = biliUserRepository.MaxMid();
-        maxMid=maxMid == null?1:maxMid;
-        for (long i = maxMid; i < maxMid+count+1; i++) {
+    public void infoStart(Integer thread,Integer count){
+        Long maxMid = biliUserRepository.maxMid()+1;
+        for (long i = maxMid; i < maxMid+count; i++) {
             String url = BiliUrlConstant.INFO_URL.replace(BiliUrlConstant.REPLACE_NAME, String.valueOf(i));
             spider.addUrl(url);
         }
@@ -71,8 +70,8 @@ public class BiliInfoService {
 //        downloader.setProxyProvider(SimpleProxyProvider.from(new Proxy("101.101.101.101",8888)));
 //        spider.setDownloader(downloader);
         spider.thread(thread).start();
-        biliFollowerService.start(thread,count,maxMid);
-        biliFlayService.start(thread,count,maxMid);
+//        biliFollowerService.start(thread,count,maxMid);
+//        biliFlayService.start(thread,count,maxMid);
     }
 
     public void stop(){

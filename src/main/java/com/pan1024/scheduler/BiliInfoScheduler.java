@@ -1,13 +1,16 @@
 package com.pan1024.scheduler;
 
+import com.pan1024.constant.BiliUrlConstant;
 import com.pan1024.pipeline.BiliPipeline;
 import com.pan1024.processor.BiliFollowerPageProcessor;
 import com.pan1024.processor.BiliInfoPageProcessor;
+import com.pan1024.processor.BiliPlayPageProcessor;
 import com.pan1024.repository.BiliUserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import us.codecraft.webmagic.Spider;
 
 /**
  * @author: Celine Q
@@ -23,58 +26,64 @@ public class BiliInfoScheduler {
     private BiliInfoPageProcessor infoPageProcessor;
     @Autowired
     private BiliFollowerPageProcessor followerPageProcessor;
-    static Long maxMid;
+    @Autowired
+    private BiliPlayPageProcessor playPageProcessor;
     @Autowired
     private BiliUserRepository repository;
 
-    @Scheduled(cron ="*/5 * * * * ?")
+    private static final long counts=1300;
+    @Scheduled(cron ="0 0 * * * *")
     public void infoScheduled() {
         log.info("----- 开始执行定时任务 -----");
         try {
-            if (maxMid==null){
-                maxMid = repository.MaxMid();
+            Long maxMid = repository.maxMid()+1;
+            Spider spider = Spider.create(infoPageProcessor).addPipeline(pipeline);
+            for (long i=maxMid;i<maxMid+counts;i++){
+                String url = BiliUrlConstant.INFO_URL.replace(BiliUrlConstant.REPLACE_NAME, String.valueOf(i));
+                spider.addUrl(url);
             }
-            maxMid=maxMid==null||maxMid==0?1:maxMid+1;
-            for (long i=maxMid;i<maxMid+5;i++){
-                long finalI = i;
-                new Thread(){
-                    @Override
-                    public void run() {
-                        synchronized(this){
-                            maxMid= finalI;
-                            System.out.println(Thread.currentThread().getName()+"---------"+maxMid);
-                        }
-                    }
-                }.start();
-            }
-
-//            Spider spider = Spider.create(infoPageProcessor).addPipeline(pipeline);
-//            for (long i=maxMid;i<maxMid+5;i++){
-//                maxMid=i;
-//                String url = BiliUrlConstant.INFO_URL.replace(BiliUrlConstant.REPLACE_NAME, String.valueOf(i));
-//                spider.addUrl(url);
-//            }
-//            spider.thread(4).run();
+            spider.thread(4).run();
         }catch (Exception e){
             log.error(e.getMessage());
         }
     }
 
-    @Scheduled(cron ="*/5 * * * * ?")
+    @Scheduled(cron ="0 20 * * * *")
     public void followerScheduled() {
-//        log.info("----- 开始执行定时任务 -----");
-//        try {
-//            Long maxMid = repository.MaxMid();
-//            maxMid=maxMid==null||maxMid==0?1:maxMid+1;
-//            Spider spider = Spider.create(followerPageProcessor).addPipeline(pipeline);
-//            for (long i=maxMid;i<maxMid+5;i++){
-//                String url = BiliUrlConstant.INFO_URL.replace(BiliUrlConstant.REPLACE_NAME, String.valueOf(i));
-//                spider.addUrl(url);
-//            }
-//            spider.thread(4).run();
-//        }catch (Exception e){
-//            log.error(e.getMessage());
-//        }
+        log.info("----- 开始执行定时任务 -----");
+        try {
+            Long maxMid = repository.fansMinMid();
+            if (maxMid==null){
+                return;
+            }
+            Spider spider = Spider.create(followerPageProcessor).addPipeline(pipeline);
+            for (long i=maxMid;i<maxMid+counts;i++){
+                String url = BiliUrlConstant.FOLLOWER_URL.replace(BiliUrlConstant.REPLACE_NAME, String.valueOf(i));
+                spider.addUrl(url);
+            }
+            spider.thread(4).run();
+        }catch (Exception e){
+            log.error(e.getMessage());
+        }
+    }
+
+    @Scheduled(cron ="0 40 * * * *")
+    public void playScheduled() {
+        log.info("----- 开始执行定时任务 -----");
+        try {
+            Long maxMid = repository.playMinMid();
+            if (maxMid==null){
+                return;
+            }
+            Spider spider = Spider.create(playPageProcessor).addPipeline(pipeline);
+            for (long i=maxMid;i<maxMid+counts;i++){
+                String url = BiliUrlConstant.PLAY_URL.replace(BiliUrlConstant.REPLACE_NAME, String.valueOf(i));
+                spider.addUrl(url);
+            }
+            spider.thread(4).run();
+        }catch (Exception e){
+            log.error(e.getMessage());
+        }
     }
 
 }

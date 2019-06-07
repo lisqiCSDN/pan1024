@@ -24,7 +24,7 @@ public class BiliInfoPageProcessor implements PageProcessor {
     private Site site = Site.me()
             .setRetryTimes(3)
             .setTimeOut(30000)
-            .setSleepTime(3000)//60s内上限150次
+            .setSleepTime(2000)//60s内上限150次
             .setCycleRetryTimes(3)
             .setUseGzip(true)
             .addHeader("Host","api.bilibili.com")

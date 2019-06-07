@@ -20,7 +20,7 @@ public class BiliFollowerPageProcessor implements PageProcessor {
     private Site site = Site.me()
             .setRetryTimes(3)
             .setTimeOut(30000)
-            .setSleepTime(3000)     //跟据试验，http://space.bilibili.com/ajax/member/GetInfo接口有IP接入限制，估计是60s内上限150次
+            .setSleepTime(2000)     //跟据试验，http://space.bilibili.com/ajax/member/GetInfo接口有IP接入限制，估计是60s内上限150次
             .setCycleRetryTimes(3)
             .setUseGzip(true)
             .addHeader("Host","api.bilibili.com")

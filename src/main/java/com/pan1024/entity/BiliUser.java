@@ -33,5 +33,7 @@ public class BiliUser {
     @Temporal(TemporalType.TIMESTAMP)
     private Date createTime ;    //收入时间
     @Temporal(TemporalType.TIMESTAMP)
-    private Date lastDate;    //最后更新时间
+    private Date fansLastDate;    //粉丝数量更新时间
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date playLastDate;    //播放量更新时间
 }

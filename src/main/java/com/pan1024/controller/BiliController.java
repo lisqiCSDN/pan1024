@@ -1,6 +1,8 @@
 package com.pan1024.controller;
 
+import com.pan1024.service.BiliFollowerService;
 import com.pan1024.service.BiliInfoService;
+import com.pan1024.service.BiliPlayService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,15 +20,14 @@ public class BiliController {
 
     @Autowired
     private BiliInfoService biliSpiderService;
-
-    @GetMapping("/index")
-    public String index(){
-        return "index";
-    }
+    @Autowired
+    private BiliFollowerService followerService;
+    @Autowired
+    private BiliPlayService playService;
 
     @GetMapping("/info/view")
     public Object infoView() {
-        return "admin/bilibili/bilibili-info";
+        return "bilibili/bilibili-info";
     }
 
     @ResponseBody
@@ -37,16 +38,53 @@ public class BiliController {
         return biliSpiderService.list(page,pageSize,search);
     }
 
-    @ResponseBody
-    @PostMapping("/start")
-    public void start(@RequestParam(defaultValue = "1")Integer thread,@RequestParam(defaultValue = "100") Integer count){
-        biliSpiderService.start(thread,count);
+    @GetMapping("/processor/view")
+    public Object processorView() {
+        return "bilibili/bilibili-processor";
     }
 
     @ResponseBody
-    @GetMapping("/stop")
+    @PostMapping("/info/start")
+    public void infoStart(@RequestParam(defaultValue = "1")Integer thread,
+                          @RequestParam(defaultValue = "100")Integer count){
+        biliSpiderService.infoStart(thread,count);
+    }
+
+    @ResponseBody
+    @GetMapping("/info/stop")
     public void stop(){
         biliSpiderService.stop();
     }
 
+    /**
+     * 获取用户关注，粉丝数
+     */
+    @ResponseBody
+    @PostMapping("/follower/start")
+    public void followerStart(@RequestParam(defaultValue = "1")Integer thread,
+                              @RequestParam(defaultValue = "100")Integer count){
+        followerService.followerStart(count);
+    }
+
+    @ResponseBody
+    @PostMapping("/follower/stop")
+    public void followerStop(){
+        followerService.followerStop();
+    }
+
+    /**
+     * 获取用户播放数
+     */
+    @ResponseBody
+    @PostMapping("/play/start")
+    public void playStart(@RequestParam(defaultValue = "1")Integer thread,
+                              @RequestParam(defaultValue = "100")Integer count){
+        playService.playStart(count);
+    }
+
+    @ResponseBody
+    @PostMapping("/play/stop")
+    public void playStop(){
+        playService.playStop();
+    }
 }

@@ -14,12 +14,12 @@ import us.codecraft.webmagic.processor.PageProcessor;
  * @describe: bilibili获取用户播放数
  */
 @Component
-public class BiliFlayPageProcessor implements PageProcessor {
+public class BiliPlayPageProcessor implements PageProcessor {
 
     private Site site = Site.me()
             .setRetryTimes(3)
             .setTimeOut(30000)
-            .setSleepTime(3000)
+            .setSleepTime(2000)
             .setCycleRetryTimes(3)
             .setUseGzip(true)
             .addHeader("Host","api.bilibili.com")
@@ -56,7 +56,7 @@ public class BiliFlayPageProcessor implements PageProcessor {
 
     //运行主方法
     public static void main(String[] args) {
-        Spider spider = Spider.create(new BiliFlayPageProcessor());
+        Spider spider = Spider.create(new BiliPlayPageProcessor());
         //添加请求对象序列
         long mid;
         for (mid = BEGIN_MID; mid < END_MID; mid++) {

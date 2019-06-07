@@ -1,5 +1,5 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
-<div id="app" th:fragment="left">
+<div id="app">
     <!-- 顶部 -->
     <div class="layui-header">
         <a href="/" class="logo">layui后台管理</a>
@@ -27,7 +27,7 @@
             <li class="layui-nav-item">
                 <a href="javascript:;">
                     <img src="http://i1.hdslb.com/bfs/face/34c5b30a990c7ce4a809626d8153fa7895ec7b63.gif" class="layui-circle" width="35" height="35">
-                    <cite>请叫我马哥</cite>
+                    <cite>请叫我哥</cite>
                 </a>
                 <dl class="layui-nav-child">
                     <dd><a href="javascript:;" data-method="notice" class="layui-btn">修改密码</a></dd>
@@ -42,7 +42,7 @@
     <div class="layui-side layui-bg-black" style="overflow: hidden;">
         <div class="user-photo">
             <a class="img" title="我的头像" ><img src="http://i1.hdslb.com/bfs/face/34c5b30a990c7ce4a809626d8153fa7895ec7b63.gif"></a>
-            <p>你好！<span class="userName">请叫我马哥</span>, 欢迎登录</p>
+            <p>你好！<span class="userName">请叫我哥</span>, 欢迎登录</p>
         </div>
         <div class="layui-side-scroll">
             <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
@@ -51,6 +51,10 @@
                     <!--<a href="/bili/info/view"-->
                        <!--th:class="${url eq '/bili/info/view'}?'layui-this':''">bilibili用户管理</a>-->
                 <!--</li>-->
+                <li class="layui-nav-item">
+                    <a href="/admin/find/all/view"
+                       th:class="${url eq '/admin/find/all/view'}?'layui-this':''">账户管理</a>
+                </li>
                 <li class="layui-nav-item"
                     th:class="${not #strings.isEmpty(url) and #strings.startsWith(url,'/bili')}?'layui-nav-item layui-nav-itemed':'layui-nav-item'">
                     <a href="javascript:;">
@@ -67,7 +71,8 @@
                             </a>
                         </dd>
                         <dd>
-                            <a href="javascript:;" data-url="">
+                            <a href="/bili/processor/view"
+                               th:class="${url eq '/bili/processor/view'}?'layui-this':''">
                                 <i class="layui-icon" data-icon=""></i>
                                 <cite>bilibili用户爬取</cite>
                             </a>
