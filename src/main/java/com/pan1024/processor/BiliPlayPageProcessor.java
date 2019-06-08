@@ -39,14 +39,15 @@ public class BiliPlayPageProcessor implements PageProcessor {
         Integer code = JsonPath.read(document, "$.code");
         if(code!=0){
             page.setSkip(true);
-        }
-        String s = page.getUrl().get();
-        String mid = s.replace(s.substring(0, s.indexOf("mid=")+4), "").replace("&jsonp=jsonp", "");
-        Integer play = JsonPath.read(document, "$.data.archive.view");
+        }else {
+            String url = page.getUrl().get();
+            String mid = url.replace(url.substring(0, url.indexOf("mid=")+4), "").replace("&jsonp=jsonp", "");
+            Integer play = JsonPath.read(document, "$.data.archive.view");
 
-        page.putField("mid",mid);
-        page.putField("play",play);
-        page.putField("type",2);
+            page.putField("mid",mid);
+            page.putField("play",play);
+            page.putField("type",2);
+        }
     }
 
     @Override

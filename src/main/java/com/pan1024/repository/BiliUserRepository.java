@@ -11,23 +11,23 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Date;
 
 @Repository
-@Transactional
+@Transactional(rollbackFor = Exception.class)
 public interface BiliUserRepository extends JpaRepository<BiliUser, Long>,JpaSpecificationExecutor<BiliUser> {
 
     @Modifying(clearAutomatically = true)
-    @Query(value = "update bilibili_user set friends = ?1,fans=?2,fans_last_date=?4 where mid=?3",nativeQuery = true)
+    @Query(value = "update bilibili_user set friends = ?1,fans=?2,fans_last_date=?4,fans_status=1 where mid=?3",nativeQuery = true)
     void upFriendsFans(int friends, int fans, long mid, Date date);
 
     @Modifying(clearAutomatically = true)
-    @Query(value = "update bilibili_user set play = ?1,play_last_date=?3 where mid=?2",nativeQuery = true)
+    @Query(value = "update bilibili_user set play = ?1,play_last_date=?3,play_status=1 where mid=?2",nativeQuery = true)
     void upPlay(int play,long mid, Date date);
 
     @Query(value = "select max(mid) from bilibili_user", nativeQuery = true)
-    long maxMid();
+    Long maxMid();
 
-    @Query(value = "select min(mid) from bilibili_user where fans_last_date is null", nativeQuery = true)
-    long fansMinMid();
+    @Query(value = "select min(mid) from bilibili_user where fans_status=0", nativeQuery = true)
+    Long fansMinMid();
 
-    @Query(value = "select min(mid) from bilibili_user where play_last_date is null", nativeQuery = true)
-    long playMinMid();
+    @Query(value = "select min(mid) from bilibili_user where play_status=0", nativeQuery = true)
+    Long playMinMid();
 }

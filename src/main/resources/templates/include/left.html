@@ -79,6 +79,30 @@
                         </dd>
                     </dl>
                 </li>
+                <li class="layui-nav-item"
+                    th:class="${not #strings.isEmpty(url) and #strings.startsWith(url,'/baidu')}?'layui-nav-item layui-nav-itemed':'layui-nav-item'">
+                    <a href="javascript:;">
+                        <i class="layui-icon" data-icon=""></i>
+                        <cite>百度云</cite>
+                        <span class="layui-nav-more"></span>
+                    </a>
+                    <dl class="layui-nav-child">
+                        <dd>
+                            <a  href="/baidu/info/view"
+                                th:class="${url eq '/baidu/info/view'}?'layui-this':''">
+                                <i class="layui-icon" data-icon=""></i>
+                                <cite>百度云用户管理</cite>
+                            </a>
+                        </dd>
+                        <dd>
+                            <a href="/baidu/processor/view"
+                               th:class="${url eq '/baidu/processor/view'}?'layui-this':''">
+                                <i class="layui-icon" data-icon=""></i>
+                                <cite>百度云用户爬取</cite>
+                            </a>
+                        </dd>
+                    </dl>
+                </li>
             </ul>
         </div>
     </div>

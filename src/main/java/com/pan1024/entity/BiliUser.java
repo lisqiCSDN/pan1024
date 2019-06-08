@@ -29,11 +29,12 @@ public class BiliUser {
     private int fans;      //粉丝数量
     private int play;    //上传视频播放量
     private String birthday;   //生日（系统默认项：0000-01-01）
-    private String place ;    //所在地点
     @Temporal(TemporalType.TIMESTAMP)
     private Date createTime ;    //收入时间
     @Temporal(TemporalType.TIMESTAMP)
     private Date fansLastDate;    //粉丝数量更新时间
     @Temporal(TemporalType.TIMESTAMP)
     private Date playLastDate;    //播放量更新时间
+    private int fansStatus;
+    private int playStatus;
 }

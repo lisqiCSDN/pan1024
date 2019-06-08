@@ -6,6 +6,7 @@ import com.pan1024.processor.BiliFollowerPageProcessor;
 import com.pan1024.repository.BiliUserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import us.codecraft.webmagic.Spider;
@@ -35,6 +36,7 @@ public class BiliFollowerService {
                 .addPipeline(biliPipeline);
     }
 
+    @Async
     public void followerStart(Integer count){
         log.info("----- 开始执行定时任务 -----");
         try {

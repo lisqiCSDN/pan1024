@@ -40,14 +40,15 @@ public class BiliFollowerPageProcessor implements PageProcessor {
         Integer code = JsonPath.read(document, "$.code");
         if(code!=0){
             page.setSkip(true);
+        }else {
+            Integer mid = JsonPath.read(document, "$.data.mid");
+            Integer following = JsonPath.read(document, "$.data.following");
+            Integer follower = JsonPath.read(document, "$.data.follower");
+            page.putField("mid",mid);
+            page.putField("following",following);
+            page.putField("follower",follower);
+            page.putField("type",1);
         }
-        Integer mid = JsonPath.read(document, "$.data.mid");
-        Integer following = JsonPath.read(document, "$.data.following");
-        Integer follower = JsonPath.read(document, "$.data.follower");
-        page.putField("mid",mid);
-        page.putField("following",following);
-        page.putField("follower",follower);
-        page.putField("type",1);
     }
 
     @Override

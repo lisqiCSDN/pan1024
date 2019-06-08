@@ -44,18 +44,19 @@ public class BiliInfoPageProcessor implements PageProcessor {
         Integer code = JsonPath.read(document, "$.code");
         if(code!=0){
             page.setSkip(true);
+        }else {
+            //使用jsonPath获取json中的有效数据，并装载入BiliUser对象
+            BiliUser user = new BiliUser();
+            user.setMid(((Integer)JsonPath.read(document,"$.data.mid")).longValue());
+            user.setName(JsonPath.read(document,"$.data.name"));
+            user.setSex(JsonPath.read(document,"$.data.sex"));
+            user.setLevel(((Integer)JsonPath.read(document,"$.data.level")));
+            user.setSign(JsonPath.read(document,"$.data.sign"));
+            user.setFace(JsonPath.read(document,"$.data.face"));
+            user.setBirthday(JsonPath.read(document,"$.data.birthday"));
+            page.putField("user",user);
+            page.putField("type",0);
         }
-        //使用jsonPath获取json中的有效数据，并装载入BiliUser对象
-        BiliUser user = new BiliUser();
-        user.setMid(((Integer)JsonPath.read(document,"$.data.mid")).longValue());
-        user.setName(JsonPath.read(document,"$.data.name"));
-        user.setSex(JsonPath.read(document,"$.data.sex"));
-        user.setLevel(((Integer)JsonPath.read(document,"$.data.level")));
-        user.setSign(JsonPath.read(document,"$.data.sign"));
-        user.setFace(JsonPath.read(document,"$.data.face"));
-        user.setBirthday(JsonPath.read(document,"$.data.birthday"));
-        page.putField("user",user);
-        page.putField("type",0);
     }
 
     @Override

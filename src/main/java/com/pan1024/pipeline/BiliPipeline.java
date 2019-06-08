@@ -11,7 +11,7 @@ import us.codecraft.webmagic.Task;
 import us.codecraft.webmagic.pipeline.Pipeline;
 
 @Component
-@Transactional
+@Transactional(rollbackFor = Exception.class)
 public class BiliPipeline implements Pipeline{
 
     @Autowired

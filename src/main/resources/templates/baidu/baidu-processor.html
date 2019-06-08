@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <title>bilibili用户抓取</title>
+    <title>百度云用户抓取</title>
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta http-equiv="Access-Control-Allow-Origin" content="*">
@@ -32,40 +32,14 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td align="left" data-edit="text">新增bili用户</td>
+                                    <td align="left" data-edit="text">新增百度云用户</td>
                                     <td data-edit="text">1</td>
                                     <td data-edit="text">5</td>
                                     <td>
-                                        <a class="layui-btn layui-btn-normal layui-btn-mini" bili="1" data-type="start">
+                                        <a class="layui-btn layui-btn-normal layui-btn-mini" baidu="1" data-type="start">
                                             开始
                                         </a>
-                                        <a class="layui-btn layui-btn-danger layui-btn-mini" bili="1" data-type="stop">
-                                            停止
-                                        </a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td align="left" data-edit="text">用户关注，粉丝数</td>
-                                    <td data-edit="text">2</td>
-                                    <td data-edit="text">6</td>
-                                    <td>
-                                        <a class="layui-btn layui-btn-normal layui-btn-mini" bili="2" data-type="start">
-                                            开始
-                                        </a>
-                                        <a class="layui-btn layui-btn-danger layui-btn-mini" bili="2" data-type="stop">
-                                            停止
-                                        </a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td align="left" data-edit="text">用户播放数</td>
-                                    <td data-edit="text">3</td>
-                                    <td data-edit="text">1</td>
-                                    <td>
-                                        <a class="layui-btn layui-btn-normal layui-btn-mini" bili="3" data-type="start">
-                                            开始
-                                        </a>
-                                        <a class="layui-btn layui-btn-danger layui-btn-mini" bili="3" data-type="stop">
+                                        <a class="layui-btn layui-btn-danger layui-btn-mini" baidu="1" data-type="stop">
                                             停止
                                         </a>
                                     </td>
@@ -90,51 +64,20 @@
             layer.msg('[ID: '+ data.id +'] ' + field + ' 字段更改为：'+ value);
         });
 
-        //监听工具条
-        table.on('tool(table-listener)', function (obj) {
-            var data = obj.data;
-            if (obj.event === 'del') {
-                layer.confirm('请确认删除该子账号', {
-                    skin: 'layui-layer-lan',
-                    anim: 1,
-                    shadeClose: true,
-                    icon: 5,
-                    title: '提示'
-                }, function (index) {
-                    $.post('/web/admin/children/admin/s/del', {id: data.id}, function (data) {
-                        if (data.code == '200') {
-                            obj.del();
-                            layer.close(index);
-                        } else {
-                            layer.msg('删除失败')
-                        }
-                    }, 'json')
-                });
-            }
-        });
-
         var $ = layui.$, active = {
             stop: function () {
-                var bili=$(this).attr('bili'),url;
-                if (bili==='1'){
-                    url='/bili/info/stop';
-                }else if (bili==='2'){
-                    url='/bili/follower/stop';
-                }else if (bili==='3'){
-                    url='/bili/play/stop';
+                var baidu=$(this).attr('baidu'),url;
+                if (baidu==='1'){
+                    url='/baidu/info/stop';
                 }
                 layer.msg('正在执行，请稍候...', {icon: 6, time: 1000, shade: 0.3})
                 $.post(url, {thread: thread,count:count},'json')
-            },start:function (obj) {
+            },start:function () {
                 var thread = $(this).parents('tr').children('td').eq(1).html(),
                     count = $(this).parents('tr').children('td').eq(2).html(),
-                    bili=$(this).attr('bili'),url;
-                if (bili==='1'){
-                    url='/bili/info/start';
-                }else if (bili==='2'){
-                    url='/bili/follower/start';
-                }else if (bili==='3'){
-                    url='/bili/play/start';
+                    baidu=$(this).attr('baidu'),url;
+                if (baidu==='1'){
+                    url='/baidu/info/start';
                 }
                 layer.msg('正在执行，请稍候...', {icon: 6, time: 1000, shade: 0.3})
                 $.post(url, {thread: thread,count:count}, 'json')

@@ -1,5 +1,8 @@
 package com.pan1024.processor;
 
+import com.jayway.jsonpath.Configuration;
+import com.jayway.jsonpath.JsonPath;
+import org.springframework.stereotype.Component;
 import us.codecraft.webmagic.Page;
 import us.codecraft.webmagic.Site;
 import us.codecraft.webmagic.Spider;
@@ -10,39 +13,49 @@ import us.codecraft.webmagic.processor.PageProcessor;
  * @Date: 2019/6/6
  * @describe:
  */
+@Component
 public class BaiduyunPageProcessor implements PageProcessor {
 
     // 抓取网站的相关配置，包括编码、抓取间隔、重试次数等
-    private Site site = Site.me().setTimeOut(10000).setRetryTimes(3).setSleepTime(10000).setCharset("UTF-8");
-    private static int count =0;
+    private Site site = Site.me()
+            .setRetryTimes(3)
+            .setTimeOut(30000)
+            .setSleepTime(2000)//60s内上限150次
+            .setCycleRetryTimes(3)
+            .setUseGzip(true)
+            .addHeader("Accept","application/json, text/plain, */*")
+            .addHeader("Accept-Encoding","gzip, deflate, br")
+            .addHeader("Connection","keep-alive")
+            .addHeader("Content-Type","application/json; charset=utf-8")
+            .setCharset("UTF-8");
+    private static String counta ="Ta还没有个人说明呢";
 
     @Override
     public void process(Page page) {
-        System.out.println("-----------");
-        //判断链接是否符合http://www.cnblogs.com/任意个数字字母-/p/7个数字.html格式
-        if(!page.getUrl().regex("http://www.cnblogs.com/[a-z 0-9 -]+/p/[0-9]{7}.html").match()){
-            //加入满足条件的链接
-            page.addTargetRequests(
-                    page.getHtml().xpath("//*[@id=\"post_list\"]/div/div[@class='post_item_body']/h3/a/@href").all());
-        }else{
-            //获取页面需要的内容
-            System.out.println("抓取的内容："+
-                    page.getHtml().xpath("//*[@id=\"Header1_HeaderTitle\"]/text()").get()
-            );
-            count ++;
+        String pageRawText = page.getRawText();
+        Object document = Configuration.defaultConfiguration().jsonProvider().parse(pageRawText);
+        Integer code = JsonPath.read(document, "$.errno");
+        if(code!=0){
+            page.setSkip(true);
+        }else {
+            Integer uk = JsonPath.read(document, "$.user_info.uk");
+            Integer follow_count = JsonPath.read(document, "$.user_info.follow_count");//关注
+            Integer fans_count = JsonPath.read(document, "$.user_info.fans_count");//粉丝
+            Integer album_count = JsonPath.read(document, "$.user_info.album_count");//专辑
+            Integer pubshare_count = JsonPath.read(document, "$.user_info.pubshare_count");//分享
+            String uname = JsonPath.read(document, "$.user_info.uname");//昵称
+            String intro = JsonPath.read(document, "$.user_info.intro");//描述
+            String avatar_url = JsonPath.read(document, "$.user_info.avatar_url");//头像
+            page.putField("uk",uk);
+            page.putField("follow_count",follow_count);
+            page.putField("fans_count",fans_count);
+            page.putField("album_count",album_count);
+            page.putField("pubshare_count",pubshare_count);
+            page.putField("uname",uname);
+            page.putField("intro",intro);
+            page.putField("avatar_url",avatar_url);
+            page.putField("url",page.getUrl().get());
         }
-//        System.out.println("-----------" +page.getUrl());
-//        if(!page.getUrl().regex("http://www.pansoso.com/zh/\\w*").match()){
-//            //加入满足条件的链接
-//            page.addTargetRequests(
-//                    page.getHtml().xpath("//*[@id=\"pss-56fa4dc5\"]").all());
-//        }else{
-//            //获取页面需要的内容
-//            count ++;
-//        }
-//        System.out.println("抓取的内容："+
-//                page.getHtml().xpath("//*[@id=\"content\"]/div[2]/h2").get()
-//        );
     }
 
     @Override
@@ -54,8 +67,8 @@ public class BaiduyunPageProcessor implements PageProcessor {
         long startTime, endTime;
         System.out.println("开始爬取...");
         startTime = System.currentTimeMillis();
-        Spider.create(new BaiduyunPageProcessor()).addUrl("http://www.cnblogs.com").thread(5).run();
+        Spider.create(new BaiduyunPageProcessor()).addUrl("https://pan.baidu.com/pcloud/user/getinfo?query_uk=2016904429").thread(1).run();
         endTime = System.currentTimeMillis();
-        System.out.println("爬取结束，耗时约" + ((endTime - startTime) / 1000) + "秒，抓取了"+count+"条记录");
+        System.out.println("爬取结束，耗时约" + ((endTime - startTime) / 1000) + "秒");
     }
 }

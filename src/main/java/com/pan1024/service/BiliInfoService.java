@@ -13,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import us.codecraft.webmagic.Spider;
@@ -52,8 +53,10 @@ public class BiliInfoService {
                 .addPipeline(biliPipeline);
     }
 
+    @Async
     public void infoStart(Integer thread,Integer count){
-        Long maxMid = biliUserRepository.maxMid()+1;
+        Long maxMid = biliUserRepository.maxMid();
+        maxMid=maxMid==null?1:maxMid+1;
         for (long i = maxMid; i < maxMid+count; i++) {
             String url = BiliUrlConstant.INFO_URL.replace(BiliUrlConstant.REPLACE_NAME, String.valueOf(i));
             spider.addUrl(url);
