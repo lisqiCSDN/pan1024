@@ -38,7 +38,7 @@ public class BiliInfoService {
     @Autowired
     private BiliPipeline biliPipeline;
     @Autowired
-    private BiliInfoPageProcessor biliSpiderPageProcessor;
+    private BiliInfoPageProcessor biliInfoPageProcessor;
     @Autowired
     private BiliUserRepository biliUserRepository;
     @Autowired
@@ -49,7 +49,7 @@ public class BiliInfoService {
     private Spider spider;
     @PostConstruct
     private void init(){
-        spider = Spider.create(biliSpiderPageProcessor)
+        spider = Spider.create(biliInfoPageProcessor)
                 .addPipeline(biliPipeline);
     }
 
@@ -81,7 +81,7 @@ public class BiliInfoService {
         spider.stop();
     }
 
-    public ResultPageVO<BiliUser> list(Integer page, Integer pageSize, String search) {
+    public ResultPageVO<BiliUser> list(Integer page, Integer pageSize, String search, Long mid) {
         Pageable pageable = PageRequest.of(page - 1, pageSize);
         Page<BiliUser> all = biliUserRepository.findAll(new Specification<BiliUser>() {
             @Override
@@ -89,11 +89,24 @@ public class BiliInfoService {
                     criteriaBuilder) {
                 List<Predicate> predicates = new ArrayList<>(1);
                 if (StringUtils.isNotBlank(search)){
-                    predicates.add(criteriaBuilder.equal(root.get("name"), "%"+search+"%"));
+                    predicates.add(criteriaBuilder.like(root.get("name"), "%"+search+"%"));
+                }
+                if (mid!=null){
+                    predicates.add(criteriaBuilder.equal(root.get("mid"), mid));
                 }
                 return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
             }
         },pageable);
         return new ResultPageVO<BiliUser>().success(all.getContent(),all.getTotalElements());
+    }
+
+    public List<Long> findVacancy(Long begin, Long count) {
+        List<Long> ids = biliUserRepository.findVacancy(begin,begin+count);
+        List<Long> uk=new ArrayList<>();
+        for (Long i=begin;i<=begin+count;i++){
+            uk.add(i);
+        }
+        uk.removeAll(ids);
+        return uk;
     }
 }

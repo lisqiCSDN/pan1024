@@ -23,16 +23,16 @@
             });
             tpwidget("show");</script>
         </div>
-        <ul class="layui-nav top_menu">
+        <ul class="layui-nav layui-layout-right">
             <li class="layui-nav-item">
                 <a href="javascript:;">
-                    <img src="http://i1.hdslb.com/bfs/face/34c5b30a990c7ce4a809626d8153fa7895ec7b63.gif" class="layui-circle" width="35" height="35">
+                    <img src="/img/default.gif" class="layui-circle" width="35" height="35">
                     <cite>请叫我哥</cite>
                 </a>
                 <dl class="layui-nav-child">
                     <dd><a href="javascript:;" data-method="notice" class="layui-btn">修改密码</a></dd>
-                    <dd><a href="javascript:;" data-url="page/user/userInfo.html"><i class="iconfont icon-zhanghu" data-icon="icon-zhanghu"></i><cite>个人资料</cite></a></dd>
-                    <dd><a href="javascript:;" data-url="page/user/changePwd.html"><i class="iconfont icon-shezhi1" data-icon="icon-shezhi1"></i><cite>修改密码</cite></a></dd>
+                    <dd><a href="javascript:;"><i class="iconfont icon-zhanghu" data-icon="icon-zhanghu"></i><cite>个人资料</cite></a></dd>
+                    <dd><a href="javascript:;"><i class="iconfont icon-shezhi1" data-icon="icon-shezhi1"></i><cite>修改密码</cite></a></dd>
                     <dd><a href="javascript:;"><i class="iconfont icon-loginout"></i><cite>退出</cite></a></dd>
                 </dl>
             </li>
@@ -41,7 +41,7 @@
 
     <div class="layui-side layui-bg-black" style="overflow: hidden;">
         <div class="user-photo">
-            <a class="img" title="我的头像" ><img src="http://i1.hdslb.com/bfs/face/34c5b30a990c7ce4a809626d8153fa7895ec7b63.gif"></a>
+            <a class="img" title="我的头像" ><img src="/img/default.gif"></a>
             <p>你好！<span class="userName">请叫我哥</span>, 欢迎登录</p>
         </div>
         <div class="layui-side-scroll">
@@ -55,11 +55,11 @@
                     <a href="/admin/find/all/view"
                        th:class="${url eq '/admin/find/all/view'}?'layui-this':''">账户管理</a>
                 </li>
-                <li class="layui-nav-item"
-                    th:class="${not #strings.isEmpty(url) and #strings.startsWith(url,'/bili')}?'layui-nav-item layui-nav-itemed':'layui-nav-item'">
+                <li class="layui-nav-item layui-nav-itemed">
+                    <!--th:class="${not #strings.isEmpty(url) and #strings.startsWith(url,'/bili')}?'layui-nav-item layui-nav-itemed':'layui-nav-item'"-->
                     <a href="javascript:;">
                         <i class="layui-icon" data-icon=""></i>
-                        <cite>bilibili</cite>
+                        <cite>b用户</cite>
                         <span class="layui-nav-more"></span>
                     </a>
                     <dl class="layui-nav-child">
@@ -67,23 +67,23 @@
                             <a  href="/bili/info/view"
                                 th:class="${url eq '/bili/info/view'}?'layui-this':''">
                                 <i class="layui-icon" data-icon=""></i>
-                                <cite>bilibili用户管理</cite>
+                                <cite>b用户管理</cite>
                             </a>
                         </dd>
                         <dd>
                             <a href="/bili/processor/view"
                                th:class="${url eq '/bili/processor/view'}?'layui-this':''">
                                 <i class="layui-icon" data-icon=""></i>
-                                <cite>bilibili用户爬取</cite>
+                                <cite>b用户抓取</cite>
                             </a>
                         </dd>
                     </dl>
                 </li>
-                <li class="layui-nav-item"
-                    th:class="${not #strings.isEmpty(url) and #strings.startsWith(url,'/baidu')}?'layui-nav-item layui-nav-itemed':'layui-nav-item'">
+                <li class="layui-nav-item layui-nav-itemed">
+                    <!--th:class="${not #strings.isEmpty(url) and #strings.startsWith(url,'/baidu')}?'layui-nav-item layui-nav-itemed':'layui-nav-item'"-->
                     <a href="javascript:;">
                         <i class="layui-icon" data-icon=""></i>
-                        <cite>百度云</cite>
+                        <cite>云用户</cite>
                         <span class="layui-nav-more"></span>
                     </a>
                     <dl class="layui-nav-child">
@@ -91,14 +91,14 @@
                             <a  href="/baidu/info/view"
                                 th:class="${url eq '/baidu/info/view'}?'layui-this':''">
                                 <i class="layui-icon" data-icon=""></i>
-                                <cite>百度云用户管理</cite>
+                                <cite>云用户管理</cite>
                             </a>
                         </dd>
                         <dd>
                             <a href="/baidu/processor/view"
                                th:class="${url eq '/baidu/processor/view'}?'layui-this':''">
                                 <i class="layui-icon" data-icon=""></i>
-                                <cite>百度云用户爬取</cite>
+                                <cite>云用户抓取</cite>
                             </a>
                         </dd>
                     </dl>
@@ -213,5 +213,9 @@
         s = s < 10 ? ("0" + s) : s;
         var str = y + "-" + m + "-" + d + " " + h + ":" + M + ":" + s;
         return str;
+    }
+
+    function iocnToImg(icon) {
+        return '<img src="'+icon+'">';
     }
 </script>

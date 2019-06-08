@@ -23,7 +23,7 @@ import java.util.Date;
 public class Admin {
 
     //默认头像
-    public static final String defaultIcon = "http://t.cn/RCzsdCq";
+    public static final String defaultIcon = "/img/default.gif";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

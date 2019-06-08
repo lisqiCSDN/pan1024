@@ -24,6 +24,9 @@
                     <div class="layui-input-inline">
                         <input type="text" id="search" value="" placeholder="请输入关键字" class="layui-input">
                     </div>
+                    <div class="layui-input-inline">
+                        <input type="text" id="mid" value="" placeholder="请输入mid" class="layui-input">
+                    </div>
                     <a class="layui-btn" data-type="reload">查询</a>
                 </div>
             </div>
@@ -75,7 +78,9 @@
                 [
                     {field: 'mid', title: 'MID', align: 'center'}
                     , {field: 'name', title: '用户名', align: 'center'}
-                    , {field: 'face', title: '头像', align: 'center'}
+                    , {field: 'face', title: '头像', align: 'center', templet: function (data){
+                        return iocnToImg(data.face)
+                    }}
                     , {field: 'sex', title: '性别', align: 'center'}
                     , {field: 'level', title: '等级', align: 'center'}
                     , {field: 'friends', title: '关注数量', align: 'center'}
@@ -127,7 +132,7 @@
                             curr: 1
                         },
                         where: {
-                            search: search
+                            search: search,mid:$('#mid').val()
                         }
                     });
                     layer.close(index);

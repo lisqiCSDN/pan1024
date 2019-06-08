@@ -70,7 +70,7 @@ public class BaiduService {
         spider.stop();
     }
 
-    public ResultPageVO<BaiduUser> list(Integer page, Integer pageSize, String search) {
+    public ResultPageVO<BaiduUser> list(Integer page, Integer pageSize, String search, Long uk) {
         Pageable pageable = PageRequest.of(page - 1, pageSize);
         Page<BaiduUser> all = baiduUserRepository.findAll(new Specification<BaiduUser>() {
             @Override
@@ -78,11 +78,24 @@ public class BaiduService {
                     criteriaBuilder) {
                 List<Predicate> predicates = new ArrayList<>(1);
                 if (StringUtils.isNotBlank(search)){
-                    predicates.add(criteriaBuilder.equal(root.get("uname"), "%"+search+"%"));
+                    predicates.add(criteriaBuilder.like(root.get("uname"), "%"+search+"%"));
+                }
+                if (uk!=null){
+                    predicates.add(criteriaBuilder.equal(root.get("uk"), uk));
                 }
                 return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
             }
         },pageable);
         return new ResultPageVO<BaiduUser>().success(all.getContent(),all.getTotalElements());
+    }
+
+    public List<Long> findVacancy(Long begin, Long count) {
+        List<Long> ids = baiduUserRepository.findVacancy(begin,begin+count);
+        List<Long> uk=new ArrayList<>();
+        for (Long i=begin;i<=begin+count;i++){
+            uk.add(i);
+        }
+        uk.removeAll(ids);
+        return uk;
     }
 }

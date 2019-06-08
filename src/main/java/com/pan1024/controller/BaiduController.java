@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * @ClassName: BiliController
  * @Date: 2019/6/6
@@ -20,7 +22,7 @@ public class BaiduController {
     private BaiduService baiduService;
 
     @GetMapping("/info/view")
-    public Object infoView() {
+    public String infoView() {
         return "baidu/baidu-info";
     }
 
@@ -28,12 +30,12 @@ public class BaiduController {
     @GetMapping("/info/list")
     public Object list(@RequestParam(required = false,defaultValue = "1")Integer page,
                        @RequestParam(required = false,defaultValue = "10")Integer pageSize,
-                       String search) {
-        return baiduService.list(page,pageSize,search);
+                       String search,Long uk) {
+        return baiduService.list(page,pageSize,search,uk);
     }
 
     @GetMapping("/processor/view")
-    public Object processorView() {
+    public String processorView() {
         return "baidu/baidu-processor";
     }
 
@@ -48,5 +50,12 @@ public class BaiduController {
     @GetMapping("/info/stop")
     public void stop(){
         baiduService.baiduStop();
+    }
+
+    @ResponseBody
+    @GetMapping("/find/vacancy")
+    public List<Long> findVacancy(@RequestParam(defaultValue = "1")Long begin,
+                                  @RequestParam(defaultValue = "100")Long count){
+        return baiduService.findVacancy(begin,count-1);
     }
 }

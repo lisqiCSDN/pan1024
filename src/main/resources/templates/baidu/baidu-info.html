@@ -24,6 +24,9 @@
                     <div class="layui-input-inline">
                         <input type="text" id="search" value="" placeholder="请输入关键字" class="layui-input">
                     </div>
+                    <div class="layui-input-inline">
+                        <input type="text" id="uk" value="" placeholder="请输入uk" class="layui-input">
+                    </div>
                     <a class="layui-btn" data-type="reload">查询</a>
                 </div>
             </div>
@@ -72,7 +75,9 @@
                 [
                     {field: 'uk', title: 'uk', align: 'center'}
                     , {field: 'uname', title: '昵称', align: 'center'}
-                    , {field: 'icon', title: '头像', align: 'center'}
+                    , {field: 'icon', title: '头像', align: 'center', templet: function (data){
+                        return iocnToImg(data.icon)
+                    }}
                     , {field: 'url', title: '分享地址', align: 'center'}
                     , {field: 'intro', title: '说明', align: 'center'}
                     , {field: 'share', title: '分享数量', align: 'center'}
@@ -124,7 +129,7 @@
                             curr: 1
                         },
                         where: {
-                            search: search
+                            search: search,uk:$('#uk').val()
                         }
                     });
                     layer.close(index);

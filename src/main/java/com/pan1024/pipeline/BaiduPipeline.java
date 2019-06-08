@@ -1,36 +1,34 @@
 package com.pan1024.pipeline;
 
-import com.pan1024.entity.BaiduUser;
 import com.pan1024.repository.BaiduUserRepository;
 import com.pan1024.util.DateUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import us.codecraft.webmagic.ResultItems;
 import us.codecraft.webmagic.Task;
 import us.codecraft.webmagic.pipeline.Pipeline;
 
+@Slf4j
 @Component
 @Transactional(rollbackFor = Exception.class)
 public class BaiduPipeline implements Pipeline{
 
     @Autowired
     private BaiduUserRepository baiduUserRepository;
-
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
     @Override
     public void process(ResultItems resultItems, Task task) {
-        BaiduUser user = new BaiduUser();
-        user.setUk(((Integer)resultItems.get("uk")).longValue());
-        user.setFollow(resultItems.get("follow_count"));
-        user.setFans(resultItems.get("fans_count"));
-        user.setAlbum(resultItems.get("album_count"));
-        user.setShare(resultItems.get("pubshare_count"));
-        user.setUname(resultItems.get("uname"));
-        user.setIntro(resultItems.get("intro"));
-        user.setIcon(resultItems.get("avatar_url"));
-        user.setUrl(resultItems.get("url"));
-        user.setCreateTime(DateUtil.getNow());
-        baiduUserRepository.save(user);
+        String sql="insert into baidu_user (album, create_time, fans, follow, icon, intro, share, uname, url, uk) " +
+                "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        Object[] args={resultItems.get("album_count"), DateUtil.getNow(),resultItems.get("fans_count"),resultItems
+                .get("follow_count"),resultItems.get("avatar_url"),resultItems.get("intro"),resultItems.get
+                ("pubshare_count"),resultItems.get("uname"),resultItems.get("url"),resultItems.get("uk")};
+        log.info(sql);
+        jdbcTemplate.update(sql,args);
     }
 
 }

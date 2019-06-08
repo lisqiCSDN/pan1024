@@ -16,7 +16,7 @@ public class AdminController {
     @Autowired private AdminService adminService;
 
     @GetMapping("/find/all/view")
-    public Object findAll() {
+    public String findAll() {
         return "admin/admin-list";
     }
 

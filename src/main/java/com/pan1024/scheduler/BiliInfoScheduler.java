@@ -31,8 +31,8 @@ public class BiliInfoScheduler {
     @Autowired
     private BiliUserRepository repository;
 
-    private static final long counts=10;
-    @Scheduled(cron ="0/5 * * * * *")
+    private static final long counts=200;
+    @Scheduled(cron ="0 0/1 * * * *")
     public void infoScheduled() {
         log.info("----- 开始执行定时任务 -----");
         try {

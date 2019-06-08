@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * @ClassName: BiliController
  * @Date: 2019/6/6
@@ -19,14 +21,14 @@ import org.springframework.web.bind.annotation.*;
 public class BiliController {
 
     @Autowired
-    private BiliInfoService biliSpiderService;
+    private BiliInfoService biliInfoService;
     @Autowired
     private BiliFollowerService followerService;
     @Autowired
     private BiliPlayService playService;
 
     @GetMapping("/info/view")
-    public Object infoView() {
+    public String infoView() {
         return "bilibili/bilibili-info";
     }
 
@@ -34,26 +36,34 @@ public class BiliController {
     @GetMapping("/info/list")
     public Object list(@RequestParam(required = false,defaultValue = "1")Integer page,
                        @RequestParam(required = false,defaultValue = "10")Integer pageSize,
-                       String search) {
-        return biliSpiderService.list(page,pageSize,search);
+                       String search,Long mid) {
+        return biliInfoService.list(page,pageSize,search,mid);
     }
 
     @GetMapping("/processor/view")
-    public Object processorView() {
+    public String processorView() {
         return "bilibili/bilibili-processor";
+    }
+
+
+    @ResponseBody
+    @GetMapping("/find/vacancy")
+    public List<Long> findVacancy(@RequestParam(defaultValue = "1")Long begin,
+                                  @RequestParam(defaultValue = "100")Long count){
+        return biliInfoService.findVacancy(begin,count-1);
     }
 
     @ResponseBody
     @PostMapping("/info/start")
     public void infoStart(@RequestParam(defaultValue = "1")Integer thread,
                           @RequestParam(defaultValue = "100")Integer count){
-        biliSpiderService.infoStart(thread,count);
+        biliInfoService.infoStart(thread,count);
     }
 
     @ResponseBody
     @GetMapping("/info/stop")
     public void stop(){
-        biliSpiderService.stop();
+        biliInfoService.stop();
     }
 
     /**
