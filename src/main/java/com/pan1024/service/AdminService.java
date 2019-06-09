@@ -19,6 +19,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -45,7 +46,7 @@ public class AdminService {
     }
 
     public ResultVoidVO updatePassword(Long id, String newPassword) {
-        adminRepository.updatePassword(id, newPassword);
+        adminRepository.updatePassword(id, MD5Util.encode(newPassword));
         return new ResultVoidVO().success();
     }
 
@@ -69,5 +70,17 @@ public class AdminService {
     public ResultVoidVO delAdmin(Long id) {
         adminRepository.delAdmin(id);
         return new ResultVoidVO().success();
+    }
+
+    public ResultVoidVO login(String name, String password, HttpServletRequest request) {
+        ResultVoidVO vo=new ResultVoidVO();
+        Optional<Admin> admin = adminRepository.findByNameAndPassword(name, MD5Util.encode(password));
+        if (admin.isPresent()){
+            request.getSession().setAttribute("admin",admin.get());
+            vo.success();
+        }else {
+            vo.fail("100001","账号或密码错误");
+        }
+        return vo;
     }
 }

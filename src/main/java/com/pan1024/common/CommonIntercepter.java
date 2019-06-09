@@ -24,9 +24,14 @@ public class CommonIntercepter implements HandlerInterceptor {
     @Override
     public void postHandle(HttpServletRequest request,
                            HttpServletResponse response, Object o, ModelAndView modelAndView) throws Exception {
-        if (request.getRequestURI().matches(".*.(?:view|/)\\\\??.*")) {
-            request.setAttribute("ctxPath",request.getContextPath());
-            request.setAttribute("url",request.getRequestURI());
+        if (!request.getRequestURI().equals("/login")){
+            if (request.getSession().getAttribute("admin")==null){
+                response.sendRedirect("/login");
+            }
+            if (request.getRequestURI().matches(".*.(?:view)\\\\??.*")) {
+                request.setAttribute("ctxPath",request.getContextPath());
+                request.setAttribute("url",request.getRequestURI());
+            }
         }
     }
 

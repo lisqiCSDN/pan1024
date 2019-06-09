@@ -1,5 +1,5 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
-<div id="app">
+<div id="app" th:inline="text">
     <!-- 顶部 -->
     <div class="layui-header">
         <a href="/" class="logo">layui后台管理</a>
@@ -26,14 +26,14 @@
         <ul class="layui-nav layui-layout-right">
             <li class="layui-nav-item">
                 <a href="javascript:;">
-                    <img src="/img/default.gif" class="layui-circle" width="35" height="35">
-                    <cite>请叫我哥</cite>
+                    <img th:src="${session.admin.icon}" class="layui-circle" width="35" height="35">
+                    <cite>[[${session.admin.name}]]</cite>
                 </a>
                 <dl class="layui-nav-child">
                     <dd><a href="javascript:;" data-method="notice" class="layui-btn">修改密码</a></dd>
-                    <dd><a href="javascript:;"><i class="iconfont icon-zhanghu" data-icon="icon-zhanghu"></i><cite>个人资料</cite></a></dd>
-                    <dd><a href="javascript:;"><i class="iconfont icon-shezhi1" data-icon="icon-shezhi1"></i><cite>修改密码</cite></a></dd>
-                    <dd><a href="javascript:;"><i class="iconfont icon-loginout"></i><cite>退出</cite></a></dd>
+                    <!--<dd><a href="javascript:;"><i class="iconfont" data-icon="icon-zhanghu"></i><cite>个人资料</cite></a></dd>-->
+                    <!--<dd><a href="javascript:;"><i class="iconfont" data-icon="icon-shezhi1"></i><cite>修改密码</cite></a></dd>-->
+                    <dd><a href="/logout" class="layui-btn"><!--<i class="iconfont"></i><cite>-->退出<!--</cite>--></a></dd>
                 </dl>
             </li>
         </ul>
@@ -41,22 +41,18 @@
 
     <div class="layui-side layui-bg-black" style="overflow: hidden;">
         <div class="user-photo">
-            <a class="img" title="我的头像" ><img src="/img/default.gif"></a>
-            <p>你好！<span class="userName">请叫我哥</span>, 欢迎登录</p>
+            <a class="img" title="我的头像" ><img th:src="${session.admin.icon}"></a>
+            <p>你好！<span class="userName">请叫我哥[[${session.admin.name}]]</span>, 欢迎登录</p>
         </div>
         <div class="layui-side-scroll">
             <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
             <ul class="layui-nav layui-nav-tree">
-                <!--<li class="layui-nav-item">-->
-                    <!--<a href="/bili/info/view"-->
-                       <!--th:class="${url eq '/bili/info/view'}?'layui-this':''">bilibili用户管理</a>-->
-                <!--</li>-->
                 <li class="layui-nav-item">
                     <a href="/admin/find/all/view"
                        th:class="${url eq '/admin/find/all/view'}?'layui-this':''">账户管理</a>
                 </li>
-                <li class="layui-nav-item layui-nav-itemed">
-                    <!--th:class="${not #strings.isEmpty(url) and #strings.startsWith(url,'/bili')}?'layui-nav-item layui-nav-itemed':'layui-nav-item'"-->
+                <li class="layui-nav-item"
+                    th:class="${not #strings.isEmpty(url) and #strings.startsWith(url,'/bili')}?'layui-nav-item layui-nav-itemed':'layui-nav-item'">
                     <a href="javascript:;">
                         <i class="layui-icon" data-icon=""></i>
                         <cite>b用户</cite>
@@ -79,8 +75,8 @@
                         </dd>
                     </dl>
                 </li>
-                <li class="layui-nav-item layui-nav-itemed">
-                    <!--th:class="${not #strings.isEmpty(url) and #strings.startsWith(url,'/baidu')}?'layui-nav-item layui-nav-itemed':'layui-nav-item'"-->
+                <li class="layui-nav-item layui-nav-itemed"
+                    th:class="${not #strings.isEmpty(url) and #strings.startsWith(url,'/baidu')}?'layui-nav-item layui-nav-itemed':'layui-nav-item'">
                     <a href="javascript:;">
                         <i class="layui-icon" data-icon=""></i>
                         <cite>云用户</cite>
@@ -111,14 +107,9 @@
 <link rel="stylesheet" href="/layui/css/layui.css"/>
 <script src="/layui/layui.js"></script>
 <script src="/js/jquery-2.1.1.js"></script>
-<script type="text/javascript">
-    $(function () {
-        $('#icon').prev('img').attr('src', $('#icon').text());
-    })
-</script>
-<script>
-    layui.use('form', function () { //独立版的layer无需执行这一句
-        var $ = layui.jquery, form = layui.form, layer = layui.layer; //独立版的layer无需执行这一句
+<script th:inline ="javascript">
+    layui.use('element','form', function () { //独立版的layer无需执行这一句
+        var $ = layui.jquery,element = layui.element,form = layui.form, layer = layui.layer; //独立版的layer无需执行这一句
         //触发事件
         var active = {
             notice: function () {
@@ -164,13 +155,15 @@
         form.on('submit(formDemo)', function (data) {
             var data = data.field;
             if (data.newPassword1 === data.newPassword2) {
-                $.post('/web/admin/update/password/s/id', {
-                    oldPassword: data.oldPassword,
+                $.post('/admin/update/password', {
+                    id:[[${session.admin.id}]],
                     newPassword: data.newPassword2
                 }, function (data) {
-                    if (data.code == '200') {
-                        layer.msg('修改成功')
-                        layer.closeAll();
+                    if (data.status === '200') {
+                        layer.msg('修改成功',{time:500},function () {
+                            layer.closeAll();
+                            top.location.href = '/logout'
+                        })
                     } else {
                         layer.msg('修改失败')
                     }
