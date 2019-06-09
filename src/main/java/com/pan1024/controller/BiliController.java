@@ -50,7 +50,7 @@ public class BiliController {
     @GetMapping("/find/vacancy")
     public List<Long> findVacancy(@RequestParam(defaultValue = "1")Long begin,
                                   @RequestParam(defaultValue = "100")Long count){
-        return biliInfoService.findVacancy(begin,count-1);
+        return biliInfoService.findVacancy(begin,count);
     }
 
     @ResponseBody
@@ -58,6 +58,12 @@ public class BiliController {
     public void infoStart(@RequestParam(defaultValue = "1")Integer thread,
                           @RequestParam(defaultValue = "100")Integer count){
         biliInfoService.infoStart(thread,count);
+    }
+
+    @ResponseBody
+    @PostMapping("/again/start")
+    public void againStart(@RequestParam List<Long> mids){
+        biliInfoService.againStart(mids);
     }
 
     @ResponseBody

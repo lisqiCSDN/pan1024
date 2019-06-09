@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <title>bilibili用户抓取</title>
+    <title>bili用户抓取</title>
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta http-equiv="Access-Control-Allow-Origin" content="*">
@@ -155,7 +155,29 @@
                     count=$(this).parents('.layui-inline').children('div:eq(1)').find("input").val();
                 if(begin>0){
                     $.get('/bili/find/vacancy', {begin: begin,count:count},function (data) {
-                        console.info(data)
+                        layer.open({
+                            type: 1
+                            , title: '未读uk' //不显示标题栏
+                            , area: ['373px', '250px']
+                            , anim: 1
+                            , shadeClose: true
+                            , id: 'LAY_layuipro' //设定一个id，防止重复弹出
+                            , btnAlign: 'c' //居中对齐
+                            , moveType: 1 //拖拽模式，0或者1
+                            , content: '<form class="layui-form" action="" style="padding-top: 33px;">' +
+                            '<div class="layui-form-item">' +
+                            '<label class="layui-form-label">uk</label>' +
+                            '<div class="layui-input-inline">' +
+                            '<span class="again">'+data+'</span>'+
+                            '</div>' +
+                            '</div>' +
+                            '<div class="layui-form-item">' +
+                            '<div class="layui-input-block">' +
+                            '<button class="layui-btn" lay-submit lay-filter="againStart">加入执行计划</button>' +
+                            '</div>' +
+                            '</div>' +
+                            '</form>'
+                        });
                     }, 'json')
                 }
             }
@@ -163,6 +185,32 @@
         $('.layui-btn').on('click', function () {
             var type = $(this).data('type');
             active[type] ? active[type].call(this) : '';
+        });
+
+        form.on('submit(againStart)', function (data) {
+            var mids=$(data.form).find(".again").text()
+            var data = data.field;
+            if (mids!=='') {
+                layer.closeAll();
+                $.ajax({
+                    type:'post',
+                    traditional :true,
+                    url:'/bili/again/start',
+                    data:{mids: mids.split(',')},
+                    success:function(data){
+                        if (data.status === '200') {
+                            layer.msg('添加成功',{time:500},function () {
+                                layer.closeAll();
+                            })
+                        } else {
+                            layer.msg('添加失败')
+                        }
+                    }
+                });
+            } else {
+                layer.msg('mid不能为空');
+            }
+            return false;
         });
     });
 </script>

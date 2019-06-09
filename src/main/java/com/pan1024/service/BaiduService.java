@@ -23,8 +23,10 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @ClassName: SpiderService
@@ -66,6 +68,22 @@ public class BaiduService {
         }
     }
 
+    @Async
+    public void againStart(List<Long> uks){
+        try {
+            if (uks.size()>0){
+                for (Long i=0L;i<uks.size();i++){
+                    String url = BaiduUrlConstant.INFO_URL.replace(BaiduUrlConstant.REPLACE_NAME, String.valueOf(uks.get
+                            (i.intValue())));
+                    spider.addUrl(url);
+                }
+                spider.thread(1).run();
+            }
+        }catch (Exception e){
+            log.error(e.getMessage());
+        }
+    }
+
     public void baiduStop(){
         spider.stop();
     }
@@ -90,12 +108,13 @@ public class BaiduService {
     }
 
     public List<Long> findVacancy(Long begin, Long count) {
-        List<Long> ids = baiduUserRepository.findVacancy(begin,begin+count);
+        List<BigInteger> ids = baiduUserRepository.findVacancy(begin,begin+count-1);
         List<Long> uk=new ArrayList<>();
-        for (Long i=begin;i<=begin+count;i++){
+        for (Long i=begin;i<begin+count;i++){
             uk.add(i);
         }
-        uk.removeAll(ids);
+        List<Long> list = ids.parallelStream().map(BigInteger::longValue).collect(Collectors.toList());
+        uk.removeAll(list);
         return uk;
     }
 }

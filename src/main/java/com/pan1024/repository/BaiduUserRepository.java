@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigInteger;
 import java.util.List;
 
 @Repository
@@ -17,5 +18,5 @@ public interface BaiduUserRepository extends JpaRepository<BaiduUser, Long>,JpaS
     Long maxMid();
 
     @Query(value = "select uk from baidu_user where uk between ?1 and ?2", nativeQuery = true)
-    List<Long> findVacancy(Long begin, Long count);
+    List<BigInteger> findVacancy(Long begin, Long count);
 }

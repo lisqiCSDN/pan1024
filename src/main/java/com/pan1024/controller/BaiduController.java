@@ -47,6 +47,12 @@ public class BaiduController {
     }
 
     @ResponseBody
+    @PostMapping("/again/start")
+    public void againStart(@RequestParam List<Long> uks){
+        baiduService.againStart(uks);
+    }
+
+    @ResponseBody
     @GetMapping("/info/stop")
     public void stop(){
         baiduService.baiduStop();
@@ -56,6 +62,6 @@ public class BaiduController {
     @GetMapping("/find/vacancy")
     public List<Long> findVacancy(@RequestParam(defaultValue = "1")Long begin,
                                   @RequestParam(defaultValue = "100")Long count){
-        return baiduService.findVacancy(begin,count-1);
+        return baiduService.findVacancy(begin,count);
     }
 }

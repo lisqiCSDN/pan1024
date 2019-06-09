@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
 
@@ -33,5 +34,5 @@ public interface BiliUserRepository extends JpaRepository<BiliUser, Long>,JpaSpe
     Long playMinMid();
 
     @Query(value = "select mid from bilibili_user where mid between ?1 and ?2", nativeQuery = true)
-    List<Long> findVacancy(Long begin, Long count);
+    List<BigInteger> findVacancy(Long begin, Long count);
 }

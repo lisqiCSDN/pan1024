@@ -23,8 +23,10 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @ClassName: SpiderService
@@ -77,6 +79,22 @@ public class BiliInfoService {
 //        biliFlayService.start(thread,count,maxMid);
     }
 
+    @Async
+    public void againStart(List<Long> mids){
+        try {
+            if (mids.size()>0){
+                for (Long i=0L;i<mids.size();i++){
+                    String url = BiliUrlConstant.INFO_URL.replace(BiliUrlConstant.REPLACE_NAME, String.valueOf(mids.get
+                            (i.intValue())));
+                    spider.addUrl(url);
+                }
+                spider.thread(1).run();
+            }
+        }catch (Exception e){
+            log.error(e.getMessage());
+        }
+    }
+
     public void stop(){
         spider.stop();
     }
@@ -101,12 +119,13 @@ public class BiliInfoService {
     }
 
     public List<Long> findVacancy(Long begin, Long count) {
-        List<Long> ids = biliUserRepository.findVacancy(begin,begin+count);
-        List<Long> uk=new ArrayList<>();
-        for (Long i=begin;i<=begin+count;i++){
-            uk.add(i);
+        List<BigInteger> ids = biliUserRepository.findVacancy(begin,begin+count-1);
+        List<Long> mid=new ArrayList<>();
+        for (Long i=begin;i<begin+count;i++){
+            mid.add(i);
         }
-        uk.removeAll(ids);
-        return uk;
+        List<Long> list = ids.parallelStream().map(BigInteger::longValue).collect(Collectors.toList());
+        mid.removeAll(list);
+        return mid;
     }
 }
