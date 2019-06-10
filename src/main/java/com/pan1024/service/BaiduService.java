@@ -6,6 +6,7 @@ import com.pan1024.pipeline.BaiduPipeline;
 import com.pan1024.processor.BaiduyunPageProcessor;
 import com.pan1024.repository.BaiduUserRepository;
 import com.pan1024.vo.ResultPageVO;
+import com.pan1024.vo.ResultVoidVO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,7 +57,7 @@ public class BaiduService {
         try {
             Long maxMid = baiduUserRepository.maxMid();
             if (maxMid==null){
-                return;
+                return ;
             }
             for (long i=maxMid;i<maxMid+count;i++){
                 String url = BaiduUrlConstant.INFO_URL.replace(BaiduUrlConstant.REPLACE_NAME, String.valueOf(i));
@@ -68,8 +69,8 @@ public class BaiduService {
         }
     }
 
-    @Async
-    public void againStart(List<Long> uks){
+    public ResultVoidVO againStart(List<Long> uks){
+        ResultVoidVO vo=new ResultVoidVO();
         try {
             if (uks.size()>0){
                 for (Long i=0L;i<uks.size();i++){
@@ -78,10 +79,12 @@ public class BaiduService {
                     spider.addUrl(url);
                 }
                 spider.thread(1).run();
+                vo.success();
             }
         }catch (Exception e){
             log.error(e.getMessage());
         }
+        return vo;
     }
 
     public void baiduStop(){

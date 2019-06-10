@@ -6,6 +6,7 @@ import com.pan1024.pipeline.BiliPipeline;
 import com.pan1024.processor.BiliInfoPageProcessor;
 import com.pan1024.repository.BiliUserRepository;
 import com.pan1024.vo.ResultPageVO;
+import com.pan1024.vo.ResultVoidVO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,8 +80,8 @@ public class BiliInfoService {
 //        biliFlayService.start(thread,count,maxMid);
     }
 
-    @Async
-    public void againStart(List<Long> mids){
+    public ResultVoidVO againStart(List<Long> mids){
+        ResultVoidVO vo=new ResultVoidVO();
         try {
             if (mids.size()>0){
                 for (Long i=0L;i<mids.size();i++){
@@ -89,10 +90,12 @@ public class BiliInfoService {
                     spider.addUrl(url);
                 }
                 spider.thread(1).run();
+                vo.success();
             }
         }catch (Exception e){
             log.error(e.getMessage());
         }
+        return vo;
     }
 
     public void stop(){

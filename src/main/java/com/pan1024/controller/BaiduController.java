@@ -1,6 +1,7 @@
 package com.pan1024.controller;
 
 import com.pan1024.service.BaiduService;
+import com.pan1024.vo.ResultVoidVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -48,8 +49,8 @@ public class BaiduController {
 
     @ResponseBody
     @PostMapping("/again/start")
-    public void againStart(@RequestParam List<Long> uks){
-        baiduService.againStart(uks);
+    public ResultVoidVO againStart(@RequestParam List<Long> uks){
+        return baiduService.againStart(uks);
     }
 
     @ResponseBody

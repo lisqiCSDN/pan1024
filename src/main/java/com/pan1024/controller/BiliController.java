@@ -3,6 +3,7 @@ package com.pan1024.controller;
 import com.pan1024.service.BiliFollowerService;
 import com.pan1024.service.BiliInfoService;
 import com.pan1024.service.BiliPlayService;
+import com.pan1024.vo.ResultVoidVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -62,8 +63,8 @@ public class BiliController {
 
     @ResponseBody
     @PostMapping("/again/start")
-    public void againStart(@RequestParam List<Long> mids){
-        biliInfoService.againStart(mids);
+    public ResultVoidVO againStart(@RequestParam List<Long> mids){
+        return biliInfoService.againStart(mids);
     }
 
     @ResponseBody
