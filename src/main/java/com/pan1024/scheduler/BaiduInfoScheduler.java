@@ -25,7 +25,7 @@ public class BaiduInfoScheduler {
     @Autowired
     private BaiduUserRepository repository;
 
-    private static final long counts=20;
+    private static final long counts=300;
     @Scheduled(cron ="0/5 * * * * *")
     public void infoScheduled() {
         log.info("----- 开始执行定时任务 -----");
@@ -37,7 +37,7 @@ public class BaiduInfoScheduler {
                 String url = BaiduUrlConstant.INFO_URL.replace(BaiduUrlConstant.REPLACE_NAME, String.valueOf(i));
                 spider.addUrl(url);
             }
-            spider.thread(2).run();
+            spider.thread(10).run();
         }catch (Exception e){
             log.error(e.getMessage());
         }

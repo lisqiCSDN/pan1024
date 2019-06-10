@@ -31,8 +31,8 @@ public class BiliInfoScheduler {
     @Autowired
     private BiliUserRepository repository;
 
-    private static final long counts=200;
-    @Scheduled(cron ="0 0/1 * * * *")
+    private static final long counts=300;
+    @Scheduled(cron ="0/5 * * * * *")
     public void infoScheduled() {
         log.info("----- 开始执行定时任务 -----");
         try {
@@ -43,7 +43,7 @@ public class BiliInfoScheduler {
                 String url = BiliUrlConstant.INFO_URL.replace(BiliUrlConstant.REPLACE_NAME, String.valueOf(i));
                 spider.addUrl(url);
             }
-            spider.thread(4).run();
+            spider.thread(10).run();
         }catch (Exception e){
             log.error(e.getMessage());
         }
