@@ -50,7 +50,8 @@ public class BaiduController {
     @ResponseBody
     @PostMapping("/again/start")
     public ResultVoidVO againStart(@RequestParam List<Long> uks){
-        return baiduService.againStart(uks);
+        baiduService.againStart(uks);
+        return new ResultVoidVO().success();
     }
 
     @ResponseBody

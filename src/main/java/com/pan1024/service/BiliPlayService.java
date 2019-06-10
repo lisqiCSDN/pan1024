@@ -36,7 +36,7 @@ public class BiliPlayService {
                 .addPipeline(biliPipeline);
     }
 
-    @Async
+    @Async("asyncServiceExecutor")
     public void playStart(Integer count){
         try {
             Long maxMid = biliUserRepository.playMinMid();

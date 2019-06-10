@@ -5,6 +5,7 @@ import com.pan1024.util.DateUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import us.codecraft.webmagic.ResultItems;
@@ -20,6 +21,7 @@ public class BaiduPipeline implements Pipeline{
     private BaiduUserRepository baiduUserRepository;
     @Autowired
     private JdbcTemplate jdbcTemplate;
+    @Async("asyncServiceExecutor")
     @Override
     public void process(ResultItems resultItems, Task task) {
         String sql="insert into baidu_user (album, create_time, fans, follow, icon, intro, share, uname, url, uk) " +

@@ -64,7 +64,8 @@ public class BiliController {
     @ResponseBody
     @PostMapping("/again/start")
     public ResultVoidVO againStart(@RequestParam List<Long> mids){
-        return biliInfoService.againStart(mids);
+        biliInfoService.againStart(mids);
+        return new ResultVoidVO().success();
     }
 
     @ResponseBody

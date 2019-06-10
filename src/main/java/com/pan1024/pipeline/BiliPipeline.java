@@ -6,6 +6,7 @@ import com.pan1024.util.DateUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import us.codecraft.webmagic.ResultItems;
@@ -22,6 +23,7 @@ public class BiliPipeline implements Pipeline{
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
+    @Async("asyncServiceExecutor")
     @Override
     public void process(ResultItems resultItems, Task task) {
         int type = resultItems.get("type");

@@ -36,7 +36,7 @@ public class BiliFollowerService {
                 .addPipeline(biliPipeline);
     }
 
-    @Async
+    @Async("asyncServiceExecutor")
     public void followerStart(Integer count){
         log.info("----- 开始执行定时任务 -----");
         try {
