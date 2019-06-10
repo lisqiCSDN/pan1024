@@ -49,7 +49,7 @@ public class BiliInfoScheduler {
         }
     }
 
-//    @Scheduled(cron ="0 20 * * * *")
+//    @Scheduled(cron ="0/5 * * * * *")
 //    public void followerScheduled() {
 //        log.info("----- 开始执行定时任务 -----");
 //        try {
@@ -68,7 +68,7 @@ public class BiliInfoScheduler {
 //        }
 //    }
 //
-//    @Scheduled(cron ="0 40 * * * *")
+//    @Scheduled(cron ="0/10 * * * * *")
 //    public void playScheduled() {
 //        log.info("----- 开始执行定时任务 -----");
 //        try {
