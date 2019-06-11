@@ -14,7 +14,7 @@ import java.util.List;
 @Transactional(rollbackFor = Exception.class)
 public interface BaiduUserRepository extends JpaRepository<BaiduUser, Long>,JpaSpecificationExecutor<BaiduUser> {
 
-    @Query(value = "select max(uk) from baidu_user", nativeQuery = true)
+    @Query(value = "select max(uk) from baidu_user where uk between 20000000 and 30000000-1", nativeQuery = true)
     Long maxMid();
 
     @Query(value = "select uk from baidu_user where uk between ?1 and ?2", nativeQuery = true)

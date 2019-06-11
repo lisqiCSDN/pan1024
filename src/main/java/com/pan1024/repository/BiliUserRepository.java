@@ -24,7 +24,7 @@ public interface BiliUserRepository extends JpaRepository<BiliUser, Long>,JpaSpe
     @Query(value = "update bilibili_user set play = ?1,play_last_date=?3,play_status=1 where mid=?2",nativeQuery = true)
     void upPlay(int play,long mid, Date date);
 
-    @Query(value = "select max(mid) from bilibili_user", nativeQuery = true)
+    @Query(value = "select max(mid) from bilibili_user where mid between 20000000 and 30000000-1", nativeQuery = true)
     Long maxMid();
 
     @Query(value = "select min(mid) from bilibili_user where fans_status=0", nativeQuery = true)

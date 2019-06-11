@@ -37,13 +37,13 @@ public class BiliInfoScheduler {
         log.info("----- 开始执行定时任务 -----");
         try {
             Long maxMid = repository.maxMid();
-            maxMid=maxMid==null?1:maxMid+1;
+            maxMid=maxMid==null?20000000:maxMid+1;
             Spider spider = Spider.create(infoPageProcessor).addPipeline(pipeline);
             for (long i=maxMid;i<maxMid+counts;i++){
                 String url = BiliUrlConstant.INFO_URL.replace(BiliUrlConstant.REPLACE_NAME, String.valueOf(i));
                 spider.addUrl(url);
             }
-            spider.thread(10).run();
+            spider.thread(7).run();
         }catch (Exception e){
             log.error(e.getMessage());
         }
