@@ -44,10 +44,10 @@
     <div class="layui-footer" th:replace="include/bottom"></div>
 </div>
 <script type="text/html" id="operation">
-    <a class="layui-btn layui-btn-danger" lay-event="del">删除</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
 </script>
 <script type="text/javascript">
-    layui.use(['table', 'form'], function () {
+    layui.use(['element','table', 'form'], function () {
         var table = layui.table, form = layui.form;
         table.render({
             elem: '#baseInfo'

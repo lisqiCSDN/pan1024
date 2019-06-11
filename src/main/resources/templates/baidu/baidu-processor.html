@@ -66,7 +66,7 @@
     <div class="layui-footer" th:replace="include/bottom"></div>
 </div>
 <script type="text/javascript">
-    layui.use(['table', 'form'], function () {
+    layui.use(['element','table', 'form'], function () {
         var table = layui.table, form = layui.form;
         //监听单元格编辑
         table.on('edit(baseInfo)', function(obj){
