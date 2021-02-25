@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 public class AdminController {
 
     @Autowired private AdminService adminService;
+//    @Autowired private AdminService adminService;
 
     @GetMapping("/find/all/view")
     public String findAll() {
